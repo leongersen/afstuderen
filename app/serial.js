@@ -23,24 +23,41 @@
 
 	// UI:
 	function connectedPortUI ( ) {
+
 		if ( connectedSerialPort ) {
+
 			chrome.serial.disconnect(connectedSerialPort, function(){});
 			connectedSerialPort = null;
-			serialButton.innerHTML = 'Connect';
-			serialSelect.disabled = false;
-			directSerialInterface.disabled = true;
+
+			serialConnectButton.innerHTML = 'Connect';
+			serialConnectSelect.disabled = false;
+			directSerialInput.disabled = true;
+
 		} else {
-			serialButton.innerHTML = 'Disconnect';
-			serialSelect.disabled = true;
-			directSerialInterface.disabled = false;
-			connectSerialPort(serialSelect.value);
+
+			serialConnectButton.innerHTML = 'Disconnect';
+			serialConnectSelect.disabled = true;
+			directSerialInput.disabled = false;
+			connectSerialPort(serialConnectSelect.value);
 		}
+	}
+
+	function autoClearIsSet ( ) {
+		return !!directSerialClearInput.checked;
 	}
 
 
 	function sendSerialMessage ( message ) {
+
+		message += '\r\n';
+
 		chrome.serial.send(connectedSerialPort, str2ab(message), onSerialSend);
+
 		appendLog(message);
+
+		if ( autoClearIsSet() ) {
+			directSerialInput.value = "";
+		}
 	}
 
 	function appendLog ( message ) {
@@ -58,7 +75,7 @@
 		optionNode.value = port.path;
 		optionNode.innerHTML = port.path;
 
-		serialSelect.appendChild(optionNode);
+		serialConnectSelect.appendChild(optionNode);
 	}
 
 	// Connect to a serial port
@@ -93,8 +110,6 @@
 	}
 
 	function onSerialDisconnect ( ) {
-
-
 	}
 
 	function onDirectEnter ( event ) {
@@ -103,20 +118,32 @@
 			return;
 		}
 
-		sendSerialMessage(this.value + '\r\n');
-		this.value = "";
+		sendSerialMessage(this.value);
 	}
 
 	chrome.serial.onReceive.addListener(onSerialReceive);
 
-	var serialSelect = document.getElementById('serialSelect'),
-		serialButton = document.getElementById('serialButton'),
-		directSerialInterface = document.getElementById('directSerialInterface'),
-		directSerialMonitor = document.getElementById('directSerialMonitor');
+	var serialConnectSelect = document.getElementById('serialConnectSelect'),
+		serialConnectButton = document.getElementById('serialConnectButton'),
+
+		directSerialSendButton = document.getElementById('directSerialSendButton'),
+		directSerialInput = document.getElementById('directSerialInput'),
+		directSerialMonitor = document.getElementById('directSerialMonitor'),
+		directSerialClearInput = document.getElementById('directSerialClearInput');
+		directSerialClearButton = document.getElementById('directSerialClearButton');
 
 	chrome.serial.getDevices(onGetDevices);
 
-	serialButton.addEventListener('click', connectedPortUI);
-	directSerialInterface.addEventListener('keyup', onDirectEnter);
+	serialConnectButton.addEventListener('click', connectedPortUI);
+
+	directSerialSendButton.addEventListener('click', function(){
+		sendSerialMessage(directSerialInput.value);
+	});
+
+	directSerialClearButton.addEventListener('click', function(){
+		directSerialMonitor.innerHTML = "";
+	});
+
+	directSerialInput.addEventListener('keyup', onDirectEnter);
 
 }());

@@ -14,14 +14,19 @@
 
 		<nav id="nav" class="visible">
 
-			<select id="serialSelect"></select>
-			<button id="serialButton">Connect</button>
-
-			<input id="directSerialInterface" disabled placeholder="Enter message">
+			<div class="serialConnect">
+				<select id="serialConnectSelect"></select>
+				<button id="serialConnectButton">Connect</button>
+			</div>
 			
 			<pre id="directSerialMonitor"></pre>
 			
-			
+			<div class="directSerial">
+				<input id="directSerialInput" disabled placeholder="Enter message">
+				<button id="directSerialSendButton">Send</button>
+				<label><input id="directSerialClearInput" type="checkbox"> Clear input on send</label>
+				<button id="directSerialClearButton">Clear log</button>
+			</div>
 		</nav>
 		
 		<div>
