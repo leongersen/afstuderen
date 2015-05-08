@@ -9,6 +9,8 @@ activeCursor = 0
 # First sector written in since initialization
 sessionStart = 0
 
+# Next sector to be read
+readSector = 0
 
 def end ():
 	Interface.end()
@@ -61,31 +63,22 @@ def clearNextSector ( ):
 
 	Interface.eraseSector( next )
 
-# Read all sectors since initialization
+# Read all sectors since initialization. Returns 0 if there is no new data.
 def read ( ):
 
-	global sessionStart
+	global readSector
 	global activeSector
 
-	set = []
-	at = sessionStart
+	if readSector > activeSector:
+		return 0
 
-	# Can't really move this into while due to wrapping
-	if at != activeSector:
-		set.append( Interface.readSector(at) )
+	data = Interface.readSector(readSector)
 
-	while at != activeSector:
+	readSector = readSector + 1
+	if readSector >= Interface.SECTOR_COUNT:
+		readSector = 0
 
-		at = at + 1
-		if at >= Interface.SECTOR_COUNT:
-			at = 0
-
-		set.append( Interface.readSector(at) )
-
-	# Ignore session start, we've read it
-	sessionStart = activeSector
-
-	return set
+	return data
 
 # Find the first empty sector
 def initialize ( ):
@@ -93,6 +86,7 @@ def initialize ( ):
 	global activeSector
 	global activeCursor
 	global sessionStart
+	global readSector
 
 	sector = 0x00
 
@@ -113,6 +107,8 @@ def initialize ( ):
 
 	activeSector = sector
 	activeCursor = 0x00
+
 	sessionStart = activeSector
+	readSector = activeSector
 
 	return sessionStart
