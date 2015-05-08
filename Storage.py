@@ -114,3 +114,5 @@ def initialize ( ):
 	activeSector = sector
 	activeCursor = 0x00
 	sessionStart = activeSector
+
+	return sessionStart
