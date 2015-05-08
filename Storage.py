@@ -1,4 +1,4 @@
-import Interface as Interface
+import Interface
 
 # Sector currently being written
 activeSector = 0
