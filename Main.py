@@ -31,7 +31,21 @@ def updateSettings ( response ):
 	# Push to Fix mode, interval. Use setting from control panel;
 	#GPS.powerSavingMode(2, Config.IntervalGPS)
 
-def sendData ( data ):
+# Throws all messages since boot on the serial port
+def logOut ( ):
+	while 1:
+		message = Storage.read()
+		if message == 0:
+			break
+		SER.send(message)
+		SER.send('\n')
+
+# Stores a message
+def storeMessage ( message ):
+	Storage.write(message)
+
+# Handles socket state and transmits a message using GPRS
+def transmitMessage ( message ):
 
 	# If the socket is not open, we'll dial.
 	if Module.socketIsSuspended() == 0:
@@ -44,7 +58,7 @@ def sendData ( data ):
 	elif Module.socketResume() == 0:
 		SER.send('Failed socket resume\n')
 
-	response = Module.makeRequest("/", data)
+	response = Module.makeRequest("/", message)
 
 	if ( response == 0 ):
 		pass # The request failed.
@@ -54,9 +68,12 @@ def sendData ( data ):
 	if ( Module.sendEscapeSequence() == 0 ):
 		pass # Failed to escape, not in command mode.
 
+
+
+
+
 # Set error reporting to numeric;
 Module.enableErrorReporting()
-
 SER.send('Done enableErrorReporting\n')
 
 # Don't send the (+++) escape sequence when suspending a socket;
@@ -77,13 +94,17 @@ SER.send('Done activeGPSAntenna\n')
 
 if ( Module.attachNetwork() == 0 ):
 	SER.send('Failed attachNetwork\n')
-
 SER.send('Done attachNetwork\n')
 
 if ( Module.connectNetwork( Config.APN ) == 0 ):
 	SER.send('Failed connectNetwork\n')
-
 SER.send('Done connectNetwork\n')
+
+SER.send('Starting initialization at: %s\n' % MOD.secCounter())
+sector = Storage.initialize()
+SER.send('End at: %s. Sector: %s\n' % (MOD.secCounter(), sector))
+
+count = 0
 
 while 1:
 
@@ -94,14 +115,16 @@ while 1:
 	if received.find('QUIT') == 0:
 		break
 	elif received.find('LOG') == 0:
-		break
+		logOut()
 
 	message = getComposedMessage()
 	SER.send("Message: %s\n" % message)
+
+	SER.send('Message count: %s' % count)
+	storeMessage(message)
+	count = count + 1
 	
-	#sendData(message)
-
-
+	#transmitMessage(message)
 
 	MOD.sleep(10);
 
