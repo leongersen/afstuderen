@@ -37,7 +37,6 @@ def readFirstSectorByte ( sector_address ):
 	b1 = ((sector_address << 12) & 0xFF0000) >> 16
 	b2 = ((sector_address << 12) & 0x00FF00) >> 8
 
-	GPIO.setIOvalue(7, 0) # Preserve clock polarity
 	GPIO.setIOvalue(9, 0)
 
 	SPIobj.sendbyte(0x03, 1)
@@ -47,6 +46,7 @@ def readFirstSectorByte ( sector_address ):
 
 	rr = SPIobj.readbyte(1)
 	GPIO.setIOvalue(9, 1)
+	GPIO.setIOvalue(7, 0) # Preserve clock polarity
 
 	return rr
 
