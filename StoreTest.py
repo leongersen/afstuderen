@@ -14,11 +14,12 @@ SER.send('Endint at: %s. Sector: %s\n' % (MOD.secCounter(), sector))
 
 SER.send('Done initialize\n')
 
-Storage.write("a b c d e f g h i j k l m n o p q r s t u v w x y z")
-SER.send('Done write 1\n')
+# Can't do assignment in condition
+while 1:
+	data = Storage.read()
+	if data == 0:
+		break
+	SER.send(data)
+	SER.send('\n')
 
-Storage.write("1 2 3 4 5 6 7 8 9 0")
-SER.send('Done write 2\n')
-
-SER.send("".join(Storage.read()))
-SER.send('End')
+SER.send('End\n')
