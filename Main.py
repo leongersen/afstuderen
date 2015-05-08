@@ -120,7 +120,7 @@ while 1:
 	message = getComposedMessage()
 	SER.send("Message: %s\n" % message)
 
-	SER.send('Message count: %s' % count)
+	SER.send('Message count: %s\n' % count)
 	storeMessage(message)
 	count = count + 1
 	
@@ -128,4 +128,4 @@ while 1:
 
 	MOD.sleep(10);
 
-SER.send('END')
+SER.send('Stopping execution\n')
