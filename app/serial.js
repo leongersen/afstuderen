@@ -22,7 +22,7 @@
 	var connectedSerialPort = null;
 
 	// UI:
-	function connectedPortUI ( ) {
+	function connectedPortUI ( connect ) {
 
 		if ( connectedSerialPort ) {
 
@@ -33,7 +33,7 @@
 			serialConnectSelect.disabled = false;
 			directSerialInput.disabled = true;
 
-		} else {
+		} else if ( connect !== false ) {
 
 			serialConnectButton.innerHTML = 'Disconnect';
 			serialConnectSelect.disabled = true;
@@ -146,4 +146,6 @@
 
 	directSerialInput.addEventListener('keyup', onDirectEnter);
 
+	chrome.app.window.current().contentWindow.onblur = connectedPortUI.bind(null, false);
+	
 }());
