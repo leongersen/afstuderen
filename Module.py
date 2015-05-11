@@ -59,6 +59,9 @@ def enableErrorReporting ( ):
 def skipEscape ( ):
     return ATcommand('AT#SKIPESC=1')
 
+def CPUclock ( clockSet ):
+	return ATcommand("AT#CPUMODE=%s" % clockSet)
+
 def unlockSIM ( PIN = "0000" ):
 
     state = ATcommand("AT+CPIN?")
