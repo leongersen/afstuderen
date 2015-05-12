@@ -2,6 +2,6 @@
 
 :start
 cls
-"C:\Program Files (x86)\Python\python.exe" "C:\build\round.py"
+"C:\Program Files (x86)\Python\python.exe" "round.py"
 PAUSE
 goto start
