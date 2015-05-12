@@ -2,9 +2,7 @@
 
 	// Array buffer to string
 	function ab2str ( buf ) {
-		var bufView = new Uint8Array(buf);
-		var encodedString = String.fromCharCode.apply(null, bufView);
-		return decodeURIComponent(escape(encodedString));
+		return String.fromCharCode.apply(null, new Uint8Array(buf));
 	}
 
 	// String to array buffer
@@ -19,7 +17,7 @@
 
 
 
-	var connectedSerialPort = null;
+	var connectedSerialPort = null, logBuffer = false;
 
 	// UI:
 	function connectedPortUI ( connect ) {
@@ -96,9 +94,29 @@
 	}
 
 	function onSerialReceive ( info ) {
-		console.log(info);
-		console.log(ab2str(info.data));
-		appendLog(ab2str(info.data));
+
+		var data = ab2str(info.data);
+
+		//console.log(logBuffer, info, data);
+
+		if ( logBuffer !== false ) {
+
+			logBuffer += data;
+
+			if ( data.indexOf('</LOG>') != -1 ) {
+
+				// Find valid JSON;
+				var parse = logBuffer.substring(logBuffer.indexOf('['), logBuffer.lastIndexOf(']') + 1);
+				// Remove line breaks, add comma separation to JSON, trim trailing comma;
+				parse = parse.replace(/(\r\n|\n|\r)/gm, '').replace(/\]/g, '],').slice(0, -1);
+
+				console.log(parse);
+				logBuffer = false;
+			}
+
+		} else {
+			appendLog(data);
+		}
 	}
 
 	function onSerialSend ( sendInfo ){
@@ -146,6 +164,18 @@
 
 	directSerialInput.addEventListener('keyup', onDirectEnter);
 
-	chrome.app.window.current().contentWindow.onblur = connectedPortUI.bind(null, false);
-	
+	//chrome.app.window.current().contentWindow.onblur = connectedPortUI.bind(null, false);
+
+
+	var directStartLog = document.getElementById('directStartLog'),
+		directQuit = document.getElementById('directQuit'),
+		directRunScript = document.getElementById('directRunScript');
+
+	directStartLog.addEventListener('click', function(){
+		logBuffer = '';
+		sendSerialMessage('LOG');
+	});
+	directQuit.addEventListener('click', sendSerialMessage.bind(null, 'QUIT'));
+	directRunScript.addEventListener('click', sendSerialMessage.bind(null, 'AT#EXECSCR'));
+
 }());
