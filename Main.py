@@ -36,12 +36,26 @@ def updateSettings ( response ):
 
 # Throws all messages since boot on the serial port
 def logOut ( ):
+	
+	SER.send('\n\n<LOG>')
+
 	while 1:
 		message = Storage.read()
 		if message == 0:
 			break
-		SER.send(message)
-		SER.send('\n')
+
+		dataLen = len(message)
+
+		# To prevent overflowing the serial buffer,
+		# Chunk the result if it is overly long.
+		if ( dataLen > 1000 ):
+			SER.send(message[0:1000])
+			MOD.sleep(1)
+			SER.send(message[1000:])
+		else:
+			SER.send(message)
+
+	SER.send('</LOG>\n\n')
 
 # Stores a message
 def storeMessage ( message ):
@@ -122,7 +136,9 @@ while 1:
 	if received.find('QUIT') == 0:
 		break
 	elif received.find('LOG') == 0:
+		Module.CPUclock(3)
 		logOut()
+		Module.CPUclock(0)
 
 	message = getComposedMessage()
 	SER.send("Message: %s\n" % message)
