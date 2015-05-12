@@ -105,6 +105,9 @@ def initialize ( ):
 			sector = 0x00
 			break;
 
+	# Make very sure the sector is empty.
+	Interface.eraseSector(sector)
+
 	activeSector = sector
 	activeCursor = 0x00
 
