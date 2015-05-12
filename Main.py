@@ -10,6 +10,9 @@ SER.send('Start custom imports\n')
 import Module
 SER.send('Imported Module\n')
 
+Module.CPUclock(3) # Clock to 104Mhz
+SER.send('Ramped up CPU\n')
+
 import Config
 SER.send('Imported Config\n')
 
@@ -101,8 +104,12 @@ if ( Module.connectNetwork( Config.APN ) == 0 ):
 SER.send('Done connectNetwork\n')
 
 SER.send('Starting initialization at: %s\n' % MOD.secCounter())
+
 sector = Storage.initialize()
 SER.send('End at: %s. Sector: %s\n' % (MOD.secCounter(), sector))
+
+Module.CPUclock(0) # Clock back to default (@26Mhz)
+SER.send('CPU back down\n')
 
 count = 0
 
@@ -123,9 +130,9 @@ while 1:
 	SER.send('Message count: %s\n' % count)
 	storeMessage(message)
 	count = count + 1
-	
+
 	#transmitMessage(message)
 
-	MOD.sleep(10);
+	MOD.sleep(5);
 
 SER.send('Stopping execution\n')
