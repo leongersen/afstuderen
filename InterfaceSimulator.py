@@ -2,7 +2,7 @@ count = []
 scount = []
 data = []
 
-SECTOR_COUNT = 50
+SECTOR_COUNT = 150
 SECTOR_SIZE = 32
 CHUNK_SIZE = 8
 
