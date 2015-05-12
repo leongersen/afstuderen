@@ -1,4 +1,10 @@
 
+	@font-face {
+		font-family: "Roboto";
+		font-weight: normal;
+		src: url("Roboto-Regular.woff2");
+	}
+
 	html {
 		font: 16px 400 Arial;
 	}
@@ -80,4 +86,15 @@
 	}
 
 	.directSerial {
+	}
+
+	.button {
+		color: #FFF;
+		background-color: #26a69a;
+		text-align: center;
+		box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+		padding: 15px;
+		font-size: 18px;
+		line-height: 15px;
+		font-family: Roboto;
 	}
