@@ -76,10 +76,10 @@ def transmitMessage ( message ):
 	# If the socket is not open, we'll dial.
 	if Module.socketIsSuspended() == 0:
 
-		SER.send('Dail socket\n')
+		SER.send('Dail socket, state is: %s\n' % Module.ATcommand('AT#SS=1'))
 
 		if Module.socketDail( Config.API ) == 0:
-			return 1 # Failed to open a socket.
+			SER.send('Failed to open a socket\n')
 
 	elif Module.socketResume() == 0:
 		SER.send('Failed socket resume\n')
@@ -87,12 +87,12 @@ def transmitMessage ( message ):
 	response = Module.makeRequest("/", message)
 
 	if ( response == 0 ):
-		return 1 # The request failed.
+		SER.send('Request failed\n')
 	else:
 		updateSettings(response)
 
 	if ( Module.sendEscapeSequence() == 0 ):
-		return 1 # Failed to escape, not in command mode.
+		SER.send('Failed to escape, not in command mode\n')
 
 	return 0
 
