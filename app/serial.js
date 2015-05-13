@@ -53,9 +53,9 @@
 
 		appendLog(message);
 
-		if ( autoClearIsSet() ) {
+	//	if ( autoClearIsSet() ) {
 			directSerialInput.value = "";
-		}
+	//	}
 	}
 
 	function appendLog ( message ) {
