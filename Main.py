@@ -142,7 +142,6 @@ def initNetworkRelated ( ):
 def acceptCommandInput ( ):
 
 	received = SER.read()
-
 	SER.send("Read: %s\n" % received)
 
 	if received.find('QUIT') == 0:

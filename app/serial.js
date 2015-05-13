@@ -46,16 +46,10 @@
 
 
 	function sendSerialMessage ( message ) {
-
 		message += '\r\n';
-
-		chrome.serial.send(connectedSerialPort, str2ab(message), onSerialSend);
-
+		serSend(message);
+		directSerialInput.value = "";
 		appendLog(message);
-
-	//	if ( autoClearIsSet() ) {
-			directSerialInput.value = "";
-	//	}
 	}
 
 	function appendLog ( message ) {
@@ -87,7 +81,9 @@
 		}, onSerialConnect);
 	}
 
-
+	function serSend ( msg ) {
+		chrome.serial.send(connectedSerialPort, str2ab(msg), onSerialSend);
+	}
 
 	function onGetDevices ( ports ) {
 		ports.forEach(createPortOption);
@@ -120,7 +116,7 @@
 				// Remove line breaks, add comma separation to JSON, trim trailing comma;
 				parse = parse.replace(/(\r\n|\n|\r)/gm, '').replace(/\]/g, '],').slice(0, -1);
 				parse = '[' + parse + ']';
-				
+
 				console.groupCollapsed();
 				console.log('JSON. (length: ' + parse.length + ', items: ' + parse.match(/\[/g).length + ')');
 				console.log(parse);
