@@ -101,16 +101,31 @@
 
 		if ( logBuffer !== false ) {
 
+			console.groupCollapsed();
+			console.log(data);
+			console.groupEnd();
+
 			logBuffer += data;
 
-			if ( data.indexOf('</LOG>') != -1 ) {
+			var closeTag = logBuffer.indexOf('</LOG>');
 
-				// Find valid JSON;
-				var parse = logBuffer.substring(logBuffer.indexOf('['), logBuffer.lastIndexOf(']') + 1);
+			if ( closeTag != -1 ) {
+
+				// Delimit to <LOG>n</LOG>
+				var parse = logBuffer.substring(logBuffer.indexOf('<LOG>') + 5, closeTag)
+
+				// Trim down to valid JSON
+				parse = parse.substring(parse.indexOf('['), parse.lastIndexOf(']') + 1);
+
 				// Remove line breaks, add comma separation to JSON, trim trailing comma;
 				parse = parse.replace(/(\r\n|\n|\r)/gm, '').replace(/\]/g, '],').slice(0, -1);
-
+				parse = '[' + parse + ']';
+				
+				console.groupCollapsed();
+				console.log('JSON. (length: ' + parse.length + ', items: ' + parse.match(/\[/g).length + ')');
 				console.log(parse);
+				console.groupEnd();
+
 				logBuffer = false;
 			}
 
@@ -169,13 +184,16 @@
 
 	var directStartLog = document.getElementById('directStartLog'),
 		directQuit = document.getElementById('directQuit'),
-		directRunScript = document.getElementById('directRunScript');
+		directRunScript = document.getElementById('directRunScript'),
+		directStorageState = document.getElementById('directStorageState');
 
 	directStartLog.addEventListener('click', function(){
 		logBuffer = '';
 		sendSerialMessage('LOG');
 	});
+
 	directQuit.addEventListener('click', sendSerialMessage.bind(null, 'QUIT'));
 	directRunScript.addEventListener('click', sendSerialMessage.bind(null, 'AT#EXECSCR'));
+	directStorageState.addEventListener('click', sendSerialMessage.bind(null, 'STATE'));
 
 }());
