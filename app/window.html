@@ -10,6 +10,23 @@
 
 			<a id="menu">&equiv;</a>
 
+
+			<div class="modeSelectionRoot">
+			
+				<button id="modeSelectionName" class="modeSelectionName button-flat">Usage mode</button>
+			
+				<div id="modeSelectionPannel" class="modeSelection">
+
+					<p><label><input value="Active" type="radio" name="modeSelection"> Active mode</label> keeps a constant TCP connection available, and transmits data as it arrives. Changes to settings made in this panel will immediately be reflected in the device. Battery drain using this mode will be significant. (##/h)</p>
+
+					<p><label><input value="Passive" type="radio" name="modeSelection"> Passive mode</label> disables all outgoing signals, and stores GPS coordinates in internal memory until it is read using the USB connection. No communication with the tracker is possible after selecting this mode.</p>
+
+					<p><label><input value="Buffered" type="radio" name="modeSelection"> Buffered mode</label> stores data for a set interval, then attempts to transmit it in batches.</p>
+					
+					<button class="button-flat fr" id="modeSelectionClose">OK</button>
+				</div>
+			</div>
+
 		</header>
 
 		<nav id="nav" class="visible">
@@ -28,13 +45,13 @@
 
 			<div class="directSerial">
 				<label><input class="button" id="directSerialClearInput" type="checkbox"> Clear input on send</label>
-				<button id="directSerialClearButton">Clear log</button>
 			</div>
 
 			<div class="directSerial">
-				<button id="directStartLog">Log Stream</button>
-				<button id="directQuit">Return to AT interface</button>
-				<button id="directRunScript">Run Script</button>
+				<button class="button-flat" id="directSerialClearButton">Clear log</button>
+				<button class="button-flat" id="directStartLog">Log Stream</button>
+				<button class="button-flat" id="directQuit">Return to AT interface</button>
+				<button class="button-flat" id="directRunScript">Run Script</button>
 			</div>
 		</nav>
 
