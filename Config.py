@@ -7,13 +7,5 @@ API = "track.refreshless.com"
 # Transmission mode
 Mode = 'Active'
 
-# Interval to get data from the GPS module
-IntervalGPS = 10 # Todo, store NVM (?)
-
-# Interval to transmit data using the 2G network
-IntervalGPRS = 10 # Todo, store NVM (?)
-
-
-
-
-
+# Interval to get data from the GPS module (in 100ms)
+Interval = 10
