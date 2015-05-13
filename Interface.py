@@ -1,5 +1,6 @@
 import SPI
 import GPIO
+import MOD
 
 # SPI.new(SCLK_pin, MOSI_pin, MISO_pin, <SS0>, <SS1>,…<SS7>)
 SPIobj = SPI.new(7, 5, 3, 9)
@@ -24,7 +25,9 @@ def eraseSector ( sector_address ):
 	msg = '\x20%s' % addr
 
 	writeEnable()
-	return SPIobj.readwrite(msg)
+	writ = SPIobj.readwrite(msg)
+	MOD.sleep(3) # Stay within safeties for sector erase (abs.max 450ms)
+	return writ
 
 def writeData ( sector_address, cursor_address, value ):
 	addr = mbytewrap(sector_address, cursor_address)

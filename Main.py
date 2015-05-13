@@ -39,6 +39,17 @@ def updateSettings ( line ):
 	# settings[0] is 'reserved'
 	Config.Mode = settings[1]
 
+def chunkSectorMessage ( message ):
+	dataLen = len(message)
+
+	# To prevent overflowing the serial buffer,
+	# Chunk the result if it is overly long.
+	if ( dataLen > 2000 ):
+		SER.send(message[0:2000])
+		MOD.sleep(3)
+		SER.send(message[2000:])
+	else:
+		SER.send(message)
 
 # Throws all messages since boot on the serial port
 def logOut ( ):
@@ -48,18 +59,11 @@ def logOut ( ):
 	while 1:
 		message = Storage.read()
 		if message == 0:
+			message = Storage.readActive()
+			chunkSectorMessage(message)
 			break
 
-		dataLen = len(message)
-
-		# To prevent overflowing the serial buffer,
-		# Chunk the result if it is overly long.
-		if ( dataLen > 1000 ):
-			SER.send(message[0:1000])
-			MOD.sleep(1)
-			SER.send(message[1000:])
-		else:
-			SER.send(message)
+		chunkSectorMessage(message)
 
 		#SER.send('\n')
 		#MOD.sleep(5)
@@ -144,6 +148,8 @@ def acceptCommandInput ( ):
 		Module.CPUclock(0)
 	elif received.find('CONFIG') == 0:
 		updateSettings(received[7:])
+	elif received.find('STATE') == 0:
+		SER.send("\nsessionStart: %s\nactiveSector: %s\nreadSector: %s\n\n" % (Storage.sessionStart, Storage.activeSector, Storage.readSector))
 
 	return 0
 

@@ -69,7 +69,7 @@ def read ( ):
 	global readSector
 	global activeSector
 
-	if readSector > activeSector:
+	if readSector == activeSector:
 		return 0
 
 	data = Interface.readSector(readSector)
@@ -79,6 +79,10 @@ def read ( ):
 		readSector = 0
 
 	return data
+
+def readActive ( ):
+	global activeSector
+	return Interface.readSector(activeSector)
 
 # Find the first empty sector
 def initialize ( ):
