@@ -34,10 +34,15 @@ def updateSettings ( line ):
 	SER.send(line)
 	SER.send('\n')
 
+	# Ignore any message that is *way* too long
+	if (len(line) > 50):
+		return 0
+
 	settings = line.split(',')
 
 	# settings[0] is 'reserved'
 	Config.Mode = settings[1]
+	Config.Interval = int(settings[2])
 
 def chunkSectorMessage ( message ):
 	dataLen = len(message)
@@ -175,6 +180,8 @@ while 1:
 	if acceptCommandInput():
 		break
 
+	startTime = MOD.secCounter()
+
 	# Get message
 	message = getComposedMessage()
 	SER.send("Message: %s\n" % message)
@@ -190,9 +197,20 @@ while 1:
 	elif Config.Mode == 'Buffered':
 		SER.send('Buffered mode, todo!\n')
 
-	MOD.sleep(5) # TODO config
-	# Go to sleep here
+	SER.send('Ready, sleep check.\n')
 
+	endTime = MOD.secCounter()
+	timeSpend = endTime - startTime
+	sleepTime = Config.Interval - timeSpend
 
+	SER.send("Spend: %s\nInterval: %s\nSleep: %s\n" % (timeSpend, Config.Interval, sleepTime))
+
+	if sleepTime > 4:
+		MOD.powerSaving(sleepTime)
+		SER.send("Woke up! Reason: %s\n" % MOD.powerSavingExitCause())
+	elif sleepTime > 0:
+		MOD.sleep(10 * sleepTime)
+	else:
+		pass # If sleepTime < 0 we'll continue right away.
 
 SER.send('Stopping execution\n')
