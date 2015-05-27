@@ -26,7 +26,12 @@ SER.send('Done importing\n')
 
 # Builds message from peripherals
 def getComposedMessage ( ):
-	return '["%s"]' % GPS.getActualPosition() # TODO add gauge, and current sense
+
+	position = GPS.getActualPosition()
+	voltage = Gauge.getBatteryVoltage()
+	soc = Gauge.getStateOfCharge()
+
+	return '["%s,%s,%s,%s"]' % (position, voltage, soc[0], soc[1])
 
 # Write settings to config
 def updateSettings ( line ):
@@ -44,6 +49,7 @@ def updateSettings ( line ):
 	Config.Mode = settings[1]
 	Config.Interval = int(settings[2])
 
+# Split a message before sending it on the serial port
 def chunkSectorMessage ( message ):
 	dataLen = len(message)
 
@@ -118,10 +124,6 @@ def initSettings ( ):
 	# Flow control is not connected;
 	Module.disableFlowControl()
 	SER.send('Done disableFlowControl\n')
-
-	# Test module only;
-	Module.activeGPSAntenna()
-	SER.send('Done activeGPSAntenna\n')
 
 # Attach to the GPRS network
 def initNetworkRelated ( ):
@@ -207,12 +209,10 @@ while 1:
 
 	SER.send("Spend: %s\nInterval: %s\nSleep: %s\n" % (timeSpend, Config.Interval, sleepTime))
 
-	if sleepTime > 4:
-		MOD.powerSaving(sleepTime)
-		SER.send("Woke up! Reason: %s\n" % MOD.powerSavingExitCause())
-	elif sleepTime > 0:
+	# TODO: add if !noodknop && sleepTime > x powersaving sleep
+	if sleepTime > 0:
 		MOD.sleep(10 * sleepTime)
 	else:
-		pass # If sleepTime < 0 we'll continue right away.
+		pass # If sleepTime < 0: continue right away.
 
 SER.send('Stopping execution\n')
