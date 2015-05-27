@@ -57,7 +57,7 @@ def chunkSectorMessage ( message ):
 		SER.send(message)
 
 # Throws all messages since boot on the serial port
-def logOut ( ):
+def outputLog ( ):
 
 	SER.send('\n\n<LOG>')
 
@@ -148,7 +148,7 @@ def acceptCommandInput ( ):
 		return 1
 	elif received.find('LOG') == 0:
 		Module.CPUclock(3)
-		logOut()
+		outputLog()
 		Module.CPUclock(0)
 	elif received.find('CONFIG') == 0:
 		updateSettings(received[7:])
@@ -160,7 +160,10 @@ def acceptCommandInput ( ):
 # Calls initialization
 def setup ( ):
 	initSettings()
-	initNetworkRelated()
+
+	# Don't start the network on a missing battery
+	if Gauge.getBatteryVoltage() > 100:
+		initNetworkRelated()
 
 	SER.send('Starting storage initialization at: %s\n' % MOD.secCounter())
 	sector = Storage.initialize()
