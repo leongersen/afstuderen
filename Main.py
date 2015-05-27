@@ -164,7 +164,7 @@ def setup ( ):
 	initSettings()
 
 	# Don't start the network on a missing battery
-	if Gauge.getBatteryVoltage() > 100:
+	if Gauge.getStateOfCharge()[0] > 5:
 		initNetworkRelated()
 
 	SER.send('Starting storage initialization at: %s\n' % MOD.secCounter())
