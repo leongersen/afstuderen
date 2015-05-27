@@ -12,12 +12,6 @@ sessionStart = 0
 # Next sector to be read
 readSector = 0
 
-def end ():
-	Interface.end()
-
-
-
-
 def write ( value ):
 
 	global activeSector
@@ -80,6 +74,7 @@ def read ( ):
 
 	return data
 
+# Reads the currently active sector without changing state.
 def readActive ( ):
 	global activeSector
 	return Interface.readSector(activeSector)
