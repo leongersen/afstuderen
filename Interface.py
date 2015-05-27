@@ -3,7 +3,7 @@ import GPIO
 import MOD
 
 # SPI.new(SCLK_pin, MOSI_pin, MISO_pin, <SS0>, <SS1>,…<SS7>)
-SPIobj = SPI.new(7, 5, 3, 9)
+SPIobj = SPI.new(8, 10, 5, 7)
 
 # SPI.init (CPOL, CPHA, <SSPOL>, <SS>)
 SPIobj.init(0, 0, 0, 0)

@@ -1,6 +1,6 @@
 import IIC
 
-IICbus = IIC.new(10, 8, 0x36)
+IICbus = IIC.new(6, 9, 0x36)
 IICbus.init()
 
 def getBatteryVoltage ( ):
