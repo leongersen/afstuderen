@@ -59,7 +59,13 @@ def readSector ( sector_address ):
 
 	while ( n <= 0xF80 ):
 		read = SPIobj.readwrite('\x03' + mbytewrap(sector_address, n), 132)
-		x = x + read[4:]
+		read = read[4:]
+
+		# Stop reading if the remainder of the sector is empty
+		if ord(read[0]) == 0xFF:
+			break
+
+		x = x + read
 		n = n + 0x080;
 
 	return x
