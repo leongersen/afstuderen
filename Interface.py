@@ -1,6 +1,9 @@
 import SPI
 import GPIO
 import MOD
+import SER
+
+SER.set_speed('115200')
 
 # SPI.new(SCLK_pin, MOSI_pin, MISO_pin, <SS0>, <SS1>,…<SS7>)
 SPIobj = SPI.new(8, 10, 5, 7)
@@ -37,21 +40,13 @@ def writeData ( sector_address, cursor_address, value ):
 	return SPIobj.readwrite(msg)
 
 def readFirstSectorByte ( sector_address ):
-	b1 = ((sector_address << 12) & 0xFF0000) >> 16
-	b2 = ((sector_address << 12) & 0x00FF00) >> 8
-
-	GPIO.setIOvalue(9, 0)
-
-	SPIobj.sendbyte(0x03, 1)
-	SPIobj.sendbyte(b1, 1)
-	SPIobj.sendbyte(b2, 1)
-	SPIobj.sendbyte(0x00, 1)
-
-	rr = SPIobj.readbyte(1)
-	GPIO.setIOvalue(9, 1)
-	GPIO.setIOvalue(7, 0) # Preserve clock polarity
-
-	return rr
+	SER.send('A: %s\n' % sector_address)
+	addr = mbytewrap(sector_address, 0x00)
+	msg = '\x03' + addr
+	read = SPIobj.readwrite(msg, 7)
+	SER.send('B: %s\n' % SPIobj.readwrite('\x0500'))
+	SER.send('C: %s\n' % read)
+	return ord(read[5])
 
 def readSector ( sector_address ):
 	x = ''

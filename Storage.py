@@ -100,6 +100,7 @@ def initialize ( ):
 		fetch = Interface.readFirstSectorByte(sector)
 
 		if fetch == 0xFF:
+			Interface.readFirstSectorByte(sector)
 			break;
 
 		sector = sector + 1
@@ -110,7 +111,7 @@ def initialize ( ):
 			break;
 
 	# Make very sure the sector is empty.
-	Interface.eraseSector(sector)
+	#Interface.eraseSector(sector)
 
 	activeSector = sector
 	activeCursor = 0x00
