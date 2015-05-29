@@ -11,5 +11,5 @@ def getBatteryVoltage ( ):
 
 def getStateOfCharge ( ):
 	R_SOC = IICbus.readwrite('\x04', 2)
-	result = [ord(R_SOC[0]), R_SOC]
-	return result
+	# Ignore the decimals for now
+	return ord(R_SOC[0])
