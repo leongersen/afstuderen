@@ -31,7 +31,7 @@ def getComposedMessage ( ):
 	voltage = Gauge.getBatteryVoltage()
 	soc = Gauge.getStateOfCharge()
 
-	return '["%s,%s,%s,%s"]' % (position, voltage, soc[0], soc[1])
+	return '["%s,%s,%s,%s"]' % (position, voltage, soc)
 
 # Write settings to config
 def updateSettings ( line ):
@@ -69,16 +69,15 @@ def outputLog ( ):
 
 	while 1:
 		message = Storage.read()
+		
 		if message == 0:
-			message = Storage.readActive()
-			chunkSectorMessage(message)
 			break
 
 		chunkSectorMessage(message)
 
-		#SER.send('\n')
-		#MOD.sleep(5)
-
+	# Next time we'll be writing in a new sector.
+	Storage.incrementActiveSector()
+		
 	SER.send('</LOG>\n\n')
 
 # Stores a message
@@ -164,7 +163,7 @@ def setup ( ):
 	initSettings()
 
 	# Don't start the network on a missing battery
-	if Gauge.getStateOfCharge()[0] > 5:
+	if Gauge.getStateOfCharge() > 5:
 		initNetworkRelated()
 
 	SER.send('Starting storage initialization at: %s\n' % MOD.secCounter())
@@ -189,6 +188,8 @@ while 1:
 	# Get message
 	message = getComposedMessage()
 	SER.send("Message: %s\n" % message)
+	
+	# TODO: Remove this
 	SER.send('Message count: %s\n' % count)
 	count = count + 1
 
@@ -209,7 +210,10 @@ while 1:
 
 	SER.send("Spend: %s\nInterval: %s\nSleep: %s\n" % (timeSpend, Config.Interval, sleepTime))
 
-	# TODO: add if !noodknop && sleepTime > x powersaving sleep
+	# Sleep, but only if the emergency button isn't set.
+	if sleepTime > 2 && GPIO.getIOvalue(2) == 1:
+		MOD.powerSaving(sleepTime)
+		SER.send("Woke up! Reason (0=ext,1=time): %s\n" % MOD.powerSavingExitCause())
 	if sleepTime > 0:
 		MOD.sleep(10 * sleepTime)
 	else:
