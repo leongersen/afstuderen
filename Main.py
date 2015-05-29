@@ -49,21 +49,8 @@ def updateSettings ( line ):
 	Config.Mode = settings[1]
 	Config.Interval = int(settings[2])
 
-# Split a message before sending it on the serial port
-def chunkSectorMessage ( message ):
-	dataLen = len(message)
-
-	# To prevent overflowing the serial buffer,
-	# Chunk the result if it is overly long.
-	if ( dataLen > 2000 ):
-		SER.send(message[0:2000])
-		MOD.sleep(3)
-		SER.send(message[2000:])
-	else:
-		SER.send(message)
-
 # Throws all messages since boot on the serial port
-def outputLog ( ):
+def generateLog ( ):
 
 	SER.send('\n\n<LOG>')
 
@@ -73,7 +60,7 @@ def outputLog ( ):
 		if message == 0:
 			break
 
-		chunkSectorMessage(message)
+		SER.send(message)
 
 	# Next time we'll be writing in a new sector.
 	Storage.incrementActiveSector()
@@ -149,7 +136,7 @@ def acceptCommandInput ( ):
 		return 1
 	elif received.find('LOG') == 0:
 		Module.CPUclock(3)
-		outputLog()
+		generateLog()
 		Module.CPUclock(0)
 	elif received.find('CONFIG') == 0:
 		updateSettings(received[7:])
@@ -219,4 +206,6 @@ while 1:
 	else:
 		pass # If sleepTime < 0: continue right away.
 
+	SER.send('\n\n\n')
+		
 SER.send('Stopping execution\n')
