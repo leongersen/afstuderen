@@ -56,9 +56,6 @@ def readSector ( sector_address ):
 		read = SPIobj.readwrite('\x03' + mbytewrap(sector_address, n), 132)
 		read = read[4:]
 
-		#	SER.send(read)
-		#	SER.send('\n')
-
 		# Stop reading if the remainder of the sector is empty
 		if ord(read[0]) == 0xFF:
 			break
