@@ -1,6 +1,7 @@
 import GPS
 import MOD
 import SER
+import GPIO
 
 # Set serial BAUD rate
 SER.set_speed('115200')
@@ -31,7 +32,7 @@ def getComposedMessage ( ):
 	voltage = Gauge.getBatteryVoltage()
 	soc = Gauge.getStateOfCharge()
 
-	return '["%s,%s,%s,%s"]' % (position, voltage, soc)
+	return '["%s,%s,%s"]' % (position, voltage, soc)
 
 # Write settings to config
 def updateSettings ( line ):
@@ -56,15 +57,17 @@ def generateLog ( ):
 
 	while 1:
 		message = Storage.read()
-		
+
 		if message == 0:
 			break
 
-		SER.send(message)
+		SER.send(message[0:1000])
+		MOD.sleep(2)
+		SER.send(message[1000:])
 
 	# Next time we'll be writing in a new sector.
 	Storage.incrementActiveSector()
-		
+
 	SER.send('</LOG>\n\n')
 
 # Stores a message
@@ -167,6 +170,8 @@ count = 0
 
 while 1:
 
+	SER.send('\n\n\n')
+
 	if acceptCommandInput():
 		break
 
@@ -175,7 +180,7 @@ while 1:
 	# Get message
 	message = getComposedMessage()
 	SER.send("Message: %s\n" % message)
-	
+
 	# TODO: Remove this
 	SER.send('Message count: %s\n' % count)
 	count = count + 1
@@ -189,16 +194,14 @@ while 1:
 	elif Config.Mode == 'Buffered':
 		SER.send('Buffered mode, todo!\n')
 
-	SER.send('Ready, sleep check.\n')
-
 	endTime = MOD.secCounter()
 	timeSpend = endTime - startTime
 	sleepTime = Config.Interval - timeSpend
 
-	SER.send("Spend: %s\nInterval: %s\nSleep: %s\n" % (timeSpend, Config.Interval, sleepTime))
+	SER.send("Spend: %s, Interval: %s, Sleep: %s\n" % (timeSpend, Config.Interval, sleepTime))
 
 	# Sleep, but only if the emergency button isn't set.
-	if sleepTime > 2 && GPIO.getIOvalue(2) == 1:
+	if sleepTime > 2 and GPIO.getIOvalue(2) == 0:
 		MOD.powerSaving(sleepTime)
 		SER.send("Woke up! Reason (0=ext,1=time): %s\n" % MOD.powerSavingExitCause())
 	if sleepTime > 0:
@@ -206,6 +209,4 @@ while 1:
 	else:
 		pass # If sleepTime < 0: continue right away.
 
-	SER.send('\n\n\n')
-		
 SER.send('Stopping execution\n')
