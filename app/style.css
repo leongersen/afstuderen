@@ -50,6 +50,7 @@
 		display: flex;
 		flex-flow: column;
 		padding: 0 10px;
+		height: calc(100% - 70px);
 	}
 	nav.visible {
 		transform: translateX(0);
@@ -57,11 +58,6 @@
 
 	.navSpace {
 		padding: 10px 0;
-	}
-	.navSpace:after {
-		content: "";
-		display: table;
-		clear: both;
 	}
 
 	#directSerialMonitor {

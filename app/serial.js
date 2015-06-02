@@ -85,7 +85,12 @@
 		chrome.serial.send(connectedSerialPort, str2ab(msg), onSerialSend);
 	}
 
+	function listSerialDevices ( ) {
+		chrome.serial.getDevices(onGetDevices);
+	}
+
 	function onGetDevices ( ports ) {
+		serialConnectSelect.innerHTML = "";
 		ports.forEach(createPortOption);
 	}
 
@@ -93,13 +98,7 @@
 
 		var data = ab2str(info.data);
 
-		//console.log(logBuffer, info, data);
-
 		if ( logBuffer !== false ) {
-
-			console.groupCollapsed();
-			console.log(data);
-			console.groupEnd();
 
 			logBuffer += data;
 
@@ -113,8 +112,11 @@
 				// Trim down to valid JSON
 				parse = parse.substring(parse.indexOf('['), parse.lastIndexOf(']') + 1);
 
-				// Remove line breaks, add comma separation to JSON, trim trailing comma;
-				parse = parse.replace(/(\r\n|\n|\r)/gm, '').replace(/\]/g, '],').slice(0, -1);
+				// Remove line breaks, add comma separation to JSON, filter 0xFF;
+				parse = parse
+					.replace(/(\r\n|\n|\r)/gm, '')
+					.replace(new RegExp(String.fromCharCode(0xFF), 'g'), '')
+					.replace(/\]\[/g, '],[');
 				parse = '[' + parse + ']';
 
 				console.groupCollapsed();
@@ -124,10 +126,9 @@
 
 				logBuffer = false;
 			}
-
-		} else {
-			appendLog(data);
 		}
+
+		appendLog(data);
 	}
 
 	function onSerialSend ( sendInfo ){
@@ -161,7 +162,7 @@
 		directSerialClearInput = document.getElementById('directSerialClearInput');
 		directSerialClearButton = document.getElementById('directSerialClearButton');
 
-	chrome.serial.getDevices(onGetDevices);
+
 
 	serialConnectButton.addEventListener('click', connectedPortUI);
 
@@ -175,8 +176,8 @@
 
 	directSerialInput.addEventListener('keyup', onDirectEnter);
 
-	//chrome.app.window.current().contentWindow.onblur = connectedPortUI.bind(null, false);
-
+	chrome.app.window.current().contentWindow.onblur = listSerialDevices;//connectedPortUI.bind(null, false);
+	listSerialDevices();
 
 	var directStartLog = document.getElementById('directStartLog'),
 		directQuit = document.getElementById('directQuit'),
