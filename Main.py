@@ -50,6 +50,15 @@ def updateSettings ( line ):
 	Config.Mode = settings[1]
 	Config.Interval = int(settings[2])
 
+# Allow external readSector changes
+def setReadsector ( line ):
+	SER.send('Setting readSector to: ')
+	SER.send(line)
+	SER.send('\n')
+
+	settings = line.split(',')
+	Storage.readSector = int(settings[1])
+
 # Throws all messages since boot on the serial port
 def generateLog ( ):
 
@@ -145,6 +154,8 @@ def acceptCommandInput ( ):
 		updateSettings(received[7:])
 	elif received.find('STATE') == 0:
 		SER.send("\nsessionStart: %s\nactiveSector: %s\nreadSector: %s\n\n" % (Storage.sessionStart, Storage.activeSector, Storage.readSector))
+	elif received.find('READ') == 0:
+		setReadsector(received)
 
 	return 0
 
@@ -170,7 +181,7 @@ count = 0
 
 while 1:
 
-	SER.send('\n\n\n')
+	SER.send('\n\n\nReady.\n')
 
 	if acceptCommandInput():
 		break
@@ -199,12 +210,15 @@ while 1:
 	sleepTime = Config.Interval - timeSpend
 
 	SER.send("Spend: %s, Interval: %s, Sleep: %s\n" % (timeSpend, Config.Interval, sleepTime))
+	SER.send("GPIO: %s, RTS: %s\n" % (GPIO.getIOvalue(2), SER.getRTS()))
 
 	# Sleep, but only if the emergency button isn't set.
 	if sleepTime > 2 and GPIO.getIOvalue(2) == 0:
+		SER.send('Going into powerSaving.\n')
 		MOD.powerSaving(sleepTime)
 		SER.send("Woke up! Reason (0=ext,1=time): %s\n" % MOD.powerSavingExitCause())
-	if sleepTime > 0:
+	elif sleepTime > 0:
+		SER.send('Idle sleep.\n')
 		MOD.sleep(10 * sleepTime)
 	else:
 		pass # If sleepTime < 0: continue right away.
