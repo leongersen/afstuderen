@@ -8,6 +8,14 @@
       "scripts": ["background.js"]
     }
   },
+  "webview": {
+    "partitions": [
+      {
+        "name": "static",
+        "accessible_resources": ["hostResponder/builder.html", "hostResponder/map.js"]
+      }
+    ]
+  },
   "permissions": [
     "serial", "fullscreen", "webview"
   ],

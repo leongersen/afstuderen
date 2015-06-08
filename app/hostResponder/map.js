@@ -1,7 +1,21 @@
 
+	var map, markers = [], mapOptions = {
+		zoom: 16,
+		streetViewControl: false,
+		center: new google.maps.LatLng(-34.397, 150.644)
+	};
+
+	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+	window.addEventListener("message", function(){
+		buildMap(JSON.parse(event.data));
+	}, false);
+
 	function buildMap ( coords ) {
 
-		var bounds = new google.maps.LatLngBounds(), mainPoly = [], colors = ['blue', 'brown', 'green', 'orange', 'pink'], atColor = 0;
+		var bounds = new google.maps.LatLngBounds(),
+			mainPoly = [], colors = ['blue', 'brown', 'green', 'orange', 'pink'],
+			atColor = 0;
 
 		coords.forEach(function( coord, index ){
 
