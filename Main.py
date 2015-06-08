@@ -93,6 +93,7 @@ def transmitMessage ( message ):
 
 		if Module.socketDail( Config.API ) == 0:
 			SER.send('Failed to open a socket\n')
+			return 0
 
 	elif Module.socketResume() == 0:
 		SER.send('Failed socket resume\n')
