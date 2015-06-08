@@ -45,4 +45,18 @@
 	modeSelectionName.addEventListener('click', toggleModeSelection);
 	modeSelectionClose.addEventListener('click', toggleModeSelection);
 
- // CONFIG. readout, config.split(','); setSelectedMode(config[1]), intervalSelection.value = config[2]
+//CONFIG. readout, config.split(','); setSelectedMode(config[1]), intervalSelection.value = config[2]
+//
+////google.maps.event.addDomListener(window, 'load', );
+//
+//window.onload = function ( ) {
+//	buildMap(JSON.parse(dummyCoords));
+//};
+
+	var webview = document.getElementById('viewport');
+
+	webview.addEventListener('contentload', loaded);
+
+	function loaded() {
+		webview.contentWindow.postMessage(dummyCoords, '*')
+	}

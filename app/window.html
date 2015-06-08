@@ -12,9 +12,9 @@
 
 
 			<div class="modeSelectionRoot">
-			
+
 				<button id="modeSelectionName" class="modeSelectionName button-flat">Usage mode</button>
-			
+
 				<div id="modeSelectionPannel" class="modeSelection">
 
 					<p><label><input value="Active" type="radio" name="modeSelection"> Active mode</label> keeps a constant TCP connection available, and transmits data as it arrives. Changes to settings made in this panel will immediately be reflected in the device. Battery drain using this mode will be significant. (##/h)</p>
@@ -22,8 +22,8 @@
 					<p><label><input value="Passive" type="radio" name="modeSelection"> Passive mode</label> disables all outgoing signals, and stores GPS coordinates in internal memory until it is read using the USB connection. No communication with the tracker is possible after selecting this mode.</p>
 
 					<p><label><input value="Buffered" type="radio" name="modeSelection"> Buffered mode</label> stores data for a set interval, then attempts to transmit it in batches.</p>
-					
-					<label>Interval: 
+
+					<label>Interval:
 						<select id="intervalSelection">
 							<option value="10">10 seconds</option>
 							<option value="20">20 seconds</option>
@@ -32,10 +32,12 @@
 							<option value="300">5 minutes</option>
 						</select>
 					</label>
-					
+
 					<button class="button-flat fr" id="modeSelectionClose">OK</button>
 				</div>
 			</div>
+
+			<label id="datePicker">Display: <input id="datePickerInput" type="date"></label>
 
 		</header>
 
@@ -47,7 +49,7 @@
 			</div>
 
 			<pre id="directSerialMonitor"></pre>
-				
+
 			<div class="navSpace">
 				<button class="button" id="directSerialSendButton">Send</button>
 				<input id="directSerialInput" disabled placeholder="Enter message">
@@ -67,12 +69,9 @@
 			</div>
 		</nav>
 
-		<div>
+		<webview id="viewport" src="http://localhost/mapbuilder.php"></webview>
 
-
-
-		</div>
-
+		<script src="dummy.js"></script>
 		<script src="serial.js"></script>
 		<script src="ui.js"></script>
 	</body>
