@@ -157,6 +157,8 @@ def acceptCommandInput ( ):
 		SER.send("\nsessionStart: %s\nactiveSector: %s\nreadSector: %s\n\n" % (Storage.sessionStart, Storage.activeSector, Storage.readSector))
 	elif received.find('READ') == 0:
 		setReadsector(received)
+	elif received.find('CREAD') == 0:
+		SER.send("\nCONFIG:,%s,%s,\n" % (Config.Mode, Config.Interval))
 
 	return 0
 

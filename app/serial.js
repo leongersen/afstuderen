@@ -1,4 +1,3 @@
-(function(){
 
 	// Array buffer to string
 	function ab2str ( buf ) {
@@ -151,6 +150,14 @@
 		sendSerialMessage(this.value);
 	}
 
+	function writeConfig ( ) {
+		var config = getConfigString();
+		
+		console.log(config);
+		
+		sendSerialMessage(config);
+	}
+	
 	chrome.serial.onReceive.addListener(onSerialReceive);
 
 	var serialConnectSelect = document.getElementById('serialConnectSelect'),
@@ -161,8 +168,9 @@
 		directSerialMonitor = document.getElementById('directSerialMonitor'),
 		directSerialClearInput = document.getElementById('directSerialClearInput');
 		directSerialClearButton = document.getElementById('directSerialClearButton');
+		directSetConfig = document.getElementById('directSetConfig');
 
-
+	directSetConfig.addEventListener('click', writeConfig);
 
 	serialConnectButton.addEventListener('click', connectedPortUI);
 
@@ -192,5 +200,3 @@
 	directQuit.addEventListener('click', sendSerialMessage.bind(null, 'QUIT'));
 	directRunScript.addEventListener('click', sendSerialMessage.bind(null, 'AT#EXECSCR'));
 	directStorageState.addEventListener('click', sendSerialMessage.bind(null, 'STATE'));
-
-}());
