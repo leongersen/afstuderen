@@ -1,5 +1,5 @@
 
-	var map, markers = [], mapOptions = {
+	var map, markers = [], flightPath, mapOptions = {
 		zoom: 16,
 		streetViewControl: false,
 		center: new google.maps.LatLng(-34.397, 150.644)
@@ -11,7 +11,20 @@
 		buildMap(JSON.parse(event.data));
 	}, false);
 
+	function clearMap ( ) {
+		for (var i = 0; i < markers.length; i++) {
+			markers[i].setMap(null);
+		}
+		markers = [];
+
+		if ( flightPath ) {
+			flightPath.setMap(null);
+		}
+	}
+
 	function buildMap ( coords ) {
+
+		clearMap();
 
 		var bounds = new google.maps.LatLngBounds(),
 			mainPoly = [], colors = ['blue', 'brown', 'green', 'orange', 'pink'],
@@ -26,8 +39,8 @@
 			markers.push(new google.maps.Marker({
 				position: position,
 				map: map,
-				title: '' + coord[2],
-				icon: 'markers/' + colors[atColor] + '_MarkerA.png',
+				title: coord[2] + ', ' + coord[3],
+				icon: '/markers/' + colors[atColor] + '_MarkerA.png',
 				zIndex: atColor + 2
 			}));
 
@@ -39,7 +52,7 @@
 		map.setCenter(new google.maps.LatLng(coords[0][0], coords[0][1]));
 		map.fitBounds(bounds);
 
-		var flightPath = new google.maps.Polyline({
+		flightPath = new google.maps.Polyline({
 			path: mainPoly,
 			strokeColor: "#FF0000",
 			strokeOpacity: 1.0,

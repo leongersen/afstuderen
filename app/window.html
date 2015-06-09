@@ -25,6 +25,7 @@
 
 					<label>Interval:
 						<select id="intervalSelection">
+							<option value="5">5 seconds</option>
 							<option value="10">10 seconds</option>
 							<option value="20">20 seconds</option>
 							<option value="30">30 seconds</option>
@@ -37,7 +38,7 @@
 				</div>
 			</div>
 
-			<label id="datePicker">Display: <input id="datePickerInput" type="date"></label>
+			<label id="datePicker">Display: <select id="datePickerSelect"><option>-</option></select>
 
 		</header>
 
@@ -66,6 +67,7 @@
 				<button class="button-flat" id="directRunScript">Run script</button>
 				<button class="button-flat" id="directSetConfig">Set config</button>
 				<button class="button-flat" id="directStorageState">Storage state</button>
+				<button class="button-flat" id="directReadConfig">Read config</button>
 			</div>
 		</nav>
 

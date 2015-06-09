@@ -123,6 +123,12 @@
 				console.log(parse);
 				console.groupEnd();
 
+				postLog(parse);
+
+				logBuffer = false;
+
+			} else if ( logBuffer.indexOf('CONFIG:,') != -1 ) {
+				parseConfig(logBuffer);
 				logBuffer = false;
 			}
 		}
@@ -152,12 +158,9 @@
 
 	function writeConfig ( ) {
 		var config = getConfigString();
-		
-		console.log(config);
-		
 		sendSerialMessage(config);
 	}
-	
+
 	chrome.serial.onReceive.addListener(onSerialReceive);
 
 	var serialConnectSelect = document.getElementById('serialConnectSelect'),
@@ -168,7 +171,8 @@
 		directSerialMonitor = document.getElementById('directSerialMonitor'),
 		directSerialClearInput = document.getElementById('directSerialClearInput');
 		directSerialClearButton = document.getElementById('directSerialClearButton');
-		directSetConfig = document.getElementById('directSetConfig');
+		directSetConfig = document.getElementById('directSetConfig'),
+		directReadConfig = document.getElementById('directReadConfig');
 
 	directSetConfig.addEventListener('click', writeConfig);
 
@@ -200,3 +204,7 @@
 	directQuit.addEventListener('click', sendSerialMessage.bind(null, 'QUIT'));
 	directRunScript.addEventListener('click', sendSerialMessage.bind(null, 'AT#EXECSCR'));
 	directStorageState.addEventListener('click', sendSerialMessage.bind(null, 'STATE'));
+	directReadConfig.addEventListener('click', function(){
+		logBuffer = '';
+		sendSerialMessage('CREAD');
+	});

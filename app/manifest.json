@@ -12,12 +12,12 @@
     "partitions": [
       {
         "name": "static",
-        "accessible_resources": ["hostResponder/builder.html", "hostResponder/map.js"]
+        "accessible_resources": ["hostResponder/builder.html", "hostResponder/map.js", "markers/*.png"]
       }
     ]
   },
   "permissions": [
-    "serial", "fullscreen", "webview"
+    "serial", "fullscreen", "webview", "http://localhost/*"
   ],
   "icons": { "16": "calculator-16.png", "128": "calculator-128.png" }
 }
