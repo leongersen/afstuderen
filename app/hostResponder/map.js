@@ -1,8 +1,8 @@
 
 	var map, markers = [], flightPath, mapOptions = {
-		zoom: 16,
+		zoom: 7,
 		streetViewControl: false,
-		center: new google.maps.LatLng(-34.397, 150.644)
+		center: new google.maps.LatLng(52.255553, 5.535402)
 	};
 
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
