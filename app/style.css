@@ -147,14 +147,26 @@
 		line-height: 70px;
 	}
 
+
+
 	#datePicker {
-		padding: 25px;
+		padding: 0 25px;
 		margin-left: auto;
+		visibility: hidden;
+		line-height: 70px;
 	}
-	#datePickerInput {
+	#datePicker.visible {
+		visibility: visible;
+	}
+	#datePicker span {
+		padding-right: 10px;
+		color: #FFF;
+		font-family: "Roboto";
+		font-size: 15px;
+	}
+	#datePickerSelect {
 		font: Roboto;
-		padding: 0 5px;
-		margin-right: 10px;
+		padding: 5px 10px;
 	}
 
 	#directSerialInput {

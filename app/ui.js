@@ -16,6 +16,7 @@
 		modeSelectionClose = document.getElementById('modeSelectionClose'),
 		intervalSelection = document.getElementById('intervalSelection'),
 		modeSelectioRadios = document.getElementsByName('modeSelection'),
+		datePicker = document.getElementById('datePicker');
 		datePickerSelect = document.getElementById('datePickerSelect');
 
 	webview.addEventListener('consolemessage', function(e) {
@@ -38,6 +39,7 @@
 			});
 
 			datePickerSelect.addEventListener('change', onDateSelectionChange);
+			datePicker.classList.add('visible');
 		};
 
 		request.send();
