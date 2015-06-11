@@ -65,6 +65,7 @@
 		overflow: scroll;
 		flex: 2;
 		border: 1px solid #CCC;
+-webkit-user-select: text;
 	}
 	#directSerialMonitor::-webkit-scrollbar {
 		width: 12px;
