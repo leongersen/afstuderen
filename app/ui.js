@@ -1,5 +1,6 @@
 
-	var menu = document.getElementById('menu'),
+	var IMEI = null,
+		menu = document.getElementById('menu'),
 		nav = document.getElementById('nav'),
 		webview = document.getElementById('viewport'),
 		mapLoader = new Promise(function( resolve, reject ){
@@ -24,7 +25,7 @@
 	function initDateSelection ( ) {
 
 		var request = new XMLHttpRequest();
-		request.open('GET', 'http://localhost/dates.php', true);
+		request.open('GET', 'http://track.refreshless.com/' + IMEI + '/dates', true);
 
 		request.onload = function() {
 			var data = JSON.parse(request.responseText);
@@ -44,8 +45,12 @@
 
 	function onDateSelectionChange ( ) {
 
+		if ( datePickerSelect.value === '-' ) {
+			return;
+		}
+
 		var request = new XMLHttpRequest();
-		request.open('GET', 'http://localhost/sessions.php?date=' + datePickerSelect.value, true);
+		request.open('GET', 'http://track.refreshless.com/' + IMEI + '/sessions/' + datePickerSelect.value, true);
 
 		request.onload = function() {
 			mapLoader.then(function(){
@@ -59,11 +64,14 @@
 	function postLog ( data ) {
 
 		var request = new XMLHttpRequest();
-		request.open('POST', 'http://localhost/track.php', true);
+
+		request.open('POST', 'http://track.refreshless.com/' + IMEI + '/track', true);
 		request.setRequestHeader('Content-Type', 'application/json');
+
 		request.onload = function() {
 			console.log(request.responseText);
 		};
+
 		request.send(data);
 	}
 
@@ -82,7 +90,16 @@
 	}
 
 	function parseConfig ( config ) {
+
 		config = config.split(',');
+
+		console.log(config);
+
+		if ( !IMEI ) {
+			IMEI = config[0];
+			initDateSelection();
+		}
+
 		setSelectedMode(config[1]);
 		intervalSelection.value = config[2];
 	}
@@ -100,11 +117,15 @@
 		config += intervalSelection.value;
 		config += ',';
 
+		var request = new XMLHttpRequest();
+		request.open('POST', 'http://track.refreshless.com/' + IMEI + '/config', true);
+		request.send(config);
+
 		return config;
 	}
 
+
+
 	modeSelectionName.addEventListener('click', toggleModeSelection);
 	modeSelectionClose.addEventListener('click', toggleModeSelection);
-
-	initDateSelection();
-
+	modeSelectionClose.addEventListener('click', writeConfig);

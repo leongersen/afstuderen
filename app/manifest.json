@@ -1,6 +1,6 @@
 {
-  "name": "Hello World!",
-  "description": "My first Chrome App.",
+  "name": "Transfer Tracking",
+  "description": "Support software for GPS tracker.",
   "version": "0.1",
   "manifest_version": 2,
   "app": {
@@ -17,7 +17,7 @@
     ]
   },
   "permissions": [
-    "serial", "fullscreen", "webview", "http://localhost/*"
+    "serial", "fullscreen", "webview", "http://track.refreshless.com/*"
   ],
   "icons": { "16": "calculator-16.png", "128": "calculator-128.png" }
 }
