@@ -25,6 +25,10 @@ SER.send('Imported Storage\n')
 
 SER.send('Done importing\n')
 
+IMEI = Module.ATcommand('AT+CGSN').split('\r\n')[1]
+URL = '/%s/track' % IMEI
+SER.send('IMEI: %s\n' % IMEI)
+
 # Builds message from peripherals
 def getComposedMessage ( ):
 
@@ -98,7 +102,7 @@ def transmitMessage ( message ):
 	elif Module.socketResume() == 0:
 		SER.send('Failed socket resume\n')
 
-	response = Module.makeRequest("/", message)
+	response = Module.makeRequest(URL, ('[%s]' % message))
 
 	if ( response == 0 ):
 		SER.send('Request failed\n')
@@ -131,7 +135,7 @@ def initNetworkRelated ( ):
 	Module.unlockSIM()
 	SER.send('Done unlockSIM\n')
 
-	if ( Module.attachNetwork() == 0 ):
+	if ( Module.attachNetwork( 20 ) == 0 ):
 		SER.send('Failed attachNetwork\n')
 	SER.send('Done attachNetwork\n')
 
@@ -158,7 +162,7 @@ def acceptCommandInput ( ):
 	elif received.find('READ') == 0:
 		setReadsector(received)
 	elif received.find('CREAD') == 0:
-		SER.send("\nCONFIG:,%s,%s,\n" % (Config.Mode, Config.Interval))
+		SER.send("\nCONFIG:%s,%s,%s,\n\n" % (IMEI, Config.Mode, Config.Interval))
 
 	return 0
 
@@ -166,8 +170,11 @@ def acceptCommandInput ( ):
 def setup ( ):
 	initSettings()
 
-	# Don't start the network on a missing battery
-	if Gauge.getStateOfCharge() > 5:
+	SOC = Gauge.getStateOfCharge()
+	SER.send('SOC: %s\n' % SOC)
+
+	# Don't start the network on a missing/near-empty battery
+	if SOC > 25:
 		initNetworkRelated()
 
 	SER.send('Starting storage initialization at: %s\n' % MOD.secCounter())
