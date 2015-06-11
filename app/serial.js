@@ -127,13 +127,13 @@
 
 				logBuffer = false;
 
-			} else if ( logBuffer.indexOf('CONFIG:,') != -1 ) {
-				parseConfig(logBuffer);
+			} else if ( logBuffer.indexOf('CONFIG:') != -1 ) {
+				parseConfig(logBuffer.split('CONFIG:')[1].replace(/(?:\r\n|\r|\n)/g, ''));
 				logBuffer = false;
 			}
 		}
 
-		appendLog(data);
+		appendLog(data.replace(/</g,'&lt;').replace(/>/g,'&gt;'));
 	}
 
 	function onSerialSend ( sendInfo ){
@@ -171,10 +171,7 @@
 		directSerialMonitor = document.getElementById('directSerialMonitor'),
 		directSerialClearInput = document.getElementById('directSerialClearInput');
 		directSerialClearButton = document.getElementById('directSerialClearButton');
-		directSetConfig = document.getElementById('directSetConfig'),
 		directReadConfig = document.getElementById('directReadConfig');
-
-	directSetConfig.addEventListener('click', writeConfig);
 
 	serialConnectButton.addEventListener('click', connectedPortUI);
 
