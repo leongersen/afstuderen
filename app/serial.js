@@ -133,7 +133,11 @@
 			}
 		}
 
-		appendLog(data.replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+		appendLog(
+			data.replace(/</g,'&lt;')
+				.replace(/>/g,'&gt;')
+				.replace('Ready.', 'Ready, ' + new Date().toLocaleTimeString() + '.'
+			));
 	}
 
 	function onSerialSend ( sendInfo ){
@@ -158,7 +162,9 @@
 
 	function writeConfig ( ) {
 		var config = getConfigString();
-		sendSerialMessage(config);
+		if ( config ) {
+			sendSerialMessage(config);
+		}
 	}
 
 	chrome.serial.onReceive.addListener(onSerialReceive);

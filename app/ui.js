@@ -72,6 +72,7 @@
 
 		request.onload = function() {
 			console.log(request.responseText);
+			onDateSelectionChange();
 		};
 
 		request.send(data);
@@ -83,6 +84,8 @@
 				return modeSelectioRadios[i].value;
 			}
 		}
+		
+		return false;
 	}
 
 	function setSelectedMode ( val ) {
@@ -108,9 +111,13 @@
 
 	function getConfigString ( ) {
 
-		var config = 'CONFIG:,';
+		var config = 'CONFIG:,', mode = getSelectedMode();
+		
+		if ( !mode ) {
+			return false;
+		}
 
-		config += getSelectedMode();
+		config += mode;
 		config += ',';
 		config += intervalSelection.value;
 		config += ',';
