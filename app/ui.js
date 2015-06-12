@@ -1,5 +1,5 @@
 
-	var IMEI = null,
+	var IMEI = '355255042061441',
 		menu = document.getElementById('menu'),
 		nav = document.getElementById('nav'),
 		webview = document.getElementById('viewport'),
@@ -97,11 +97,7 @@
 
 		console.log(config);
 
-		if ( !IMEI ) {
-			IMEI = config[0];
-			initDateSelection();
-		}
-
+		IMEI = config[0];
 		setSelectedMode(config[1]);
 		intervalSelection.value = config[2];
 	}
@@ -127,6 +123,7 @@
 	}
 
 
+	initDateSelection();
 
 	modeSelectionName.addEventListener('click', toggleModeSelection);
 	modeSelectionClose.addEventListener('click', toggleModeSelection);
