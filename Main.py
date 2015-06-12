@@ -226,7 +226,12 @@ while 1:
 	if sleepTime > 2 and GPIO.getIOvalue(2) == 0:
 		SER.send('Going into powerSaving.\n')
 		MOD.powerSaving(sleepTime)
-		SER.send("Woke up! Reason (0=ext,1=time): %s\n" % MOD.powerSavingExitCause())
+
+		reason = MOD.powerSavingExitCause()
+		SER.send("Woke up! Reason (0=ext,1=time): %s\n" % reason)
+		if reason == 0:
+			MOD.sleep(20)
+
 	elif sleepTime > 0:
 		SER.send('Idle sleep.\n')
 		MOD.sleep(10 * sleepTime)
