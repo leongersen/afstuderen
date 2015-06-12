@@ -43,11 +43,11 @@
 						' speed: ' + coord[3] +
 						' SOC: ' + coord[4] +
 						' VCELL: ' + coord[5],
-				icon: '/markers/' + colors[atColor] + '_MarkerA.png',
+				icon: '/markers/' + colors[atColor % 10] + '_MarkerA.png',
 				zIndex: atColor + 2
 			}));
 
-			if ( coord[2] > 5 ) {
+			if ( coord[2] > 10 ) {
 				atColor++;
 			}
 		});
