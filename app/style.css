@@ -53,6 +53,8 @@
 		flex-flow: column;
 		padding: 0 10px;
 		height: calc(100% - 70px);
+		resize: horizontal;
+		overflow: hidden;
 	}
 	nav.visible {
 		transform: translateX(0);
