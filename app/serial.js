@@ -127,7 +127,7 @@
 
 				logBuffer = false;
 
-			} else if ( logBuffer.indexOf('CONFIG:') != -1 ) {
+			} else if ( logBuffer.indexOf('CONFIG:') != -1 && (logBuffer.match(/\,/g) || []).length >= 2 ) {
 				parseConfig(logBuffer.split('CONFIG:')[1].replace(/(?:\r\n|\r|\n)/g, ''));
 				logBuffer = false;
 			}
