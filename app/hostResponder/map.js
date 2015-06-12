@@ -27,7 +27,7 @@
 		clearMap();
 
 		var bounds = new google.maps.LatLngBounds(),
-			mainPoly = [], colors = ['blue', 'brown', 'green', 'orange', 'pink'],
+			mainPoly = [], colors = ['blue', 'brown', 'darkgreen','green', 'orange', 'paleblue', 'pink', 'purple', 'red', 'yellow'],
 			atColor = 0;
 
 		coords.forEach(function( coord, index ){
@@ -39,7 +39,10 @@
 			markers.push(new google.maps.Marker({
 				position: position,
 				map: map,
-				title: coord[2] + ', ' + coord[3],
+				title: 'Count: ' + coord[2] +
+						' speed: ' + coord[3] +
+						' SOC: ' + coord[4] +
+						' VCELL: ' + coord[5],
 				icon: '/markers/' + colors[atColor] + '_MarkerA.png',
 				zIndex: atColor + 2
 			}));
