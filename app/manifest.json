@@ -12,7 +12,7 @@
     "partitions": [
       {
         "name": "static",
-        "accessible_resources": ["hostResponder/builder.html", "hostResponder/map.js", "markers/*.png"]
+        "accessible_resources": ["hostResponder/*.html", "hostResponder/*.js", "markers/*.png"]
       }
     ]
   },

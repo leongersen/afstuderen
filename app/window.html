@@ -37,7 +37,10 @@
 				</div>
 			</div>
 
-			<label id="datePicker"><span>Display:</span> <select id="datePickerSelect"><option>-</option></select>
+			<div id="datePicker">
+				<label><span>Map:</span> <input id="mapCheckbox" checked type="checkbox"></label>
+				<label><span>Date:</span> <select id="datePickerSelect"><option>-</option></select></label>
+			</div>
 
 		</header>
 
@@ -65,7 +68,7 @@
 			</div>
 		</nav>
 
-		<webview id="viewport" partition="static" src="hostResponder/builder.html"></webview>
+		<webview id="viewport" partition="static" src="hostResponder/map.html"></webview>
 
 		<script src="dummy.js"></script>
 		<script src="serial.js"></script>

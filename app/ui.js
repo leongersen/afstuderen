@@ -17,11 +17,13 @@
 		intervalSelection = document.getElementById('intervalSelection'),
 		modeSelectioRadios = document.getElementsByName('modeSelection'),
 		datePicker = document.getElementById('datePicker');
-		datePickerSelect = document.getElementById('datePickerSelect');
+		datePickerSelect = document.getElementById('datePickerSelect'),
+		mapCheckbox = document.getElementById('mapCheckbox');
 
 	webview.addEventListener('consolemessage', function(e) {
 	  console.log('Guest page logged a message: ', e.message);
 	});
+	webview.addEventListener("loadstop", onDateSelectionChange);
 
 	function initDateSelection ( ) {
 
@@ -39,10 +41,15 @@
 			});
 
 			datePickerSelect.addEventListener('change', onDateSelectionChange);
+			mapCheckbox.addEventListener('change', onMapModeChange);
 			datePicker.classList.add('visible');
 		};
 
 		request.send();
+	}
+
+	function onMapModeChange ( ) {
+		webview.setAttribute('src', mapCheckbox.checked ? 'hostResponder/map.html' : 'hostResponder/chart.html');
 	}
 
 	function onDateSelectionChange ( ) {
@@ -52,7 +59,7 @@
 		}
 
 		var request = new XMLHttpRequest();
-		request.open('GET', 'http://track.refreshless.com/' + IMEI + '/sessions/' + datePickerSelect.value, true);
+		request.open('GET', 'http://track.refreshless.com/' + IMEI + '/sessions/' + datePickerSelect.value + '&map=' + mapCheckbox.checked, true);
 
 		request.onload = function() {
 			mapLoader.then(function(){

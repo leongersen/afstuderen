@@ -164,8 +164,10 @@
 	#datePicker.visible {
 		visibility: visible;
 	}
+	#datePicker label {
+		padding: 0 5px;
+	}
 	#datePicker span {
-		padding-right: 10px;
 		color: #FFF;
 		font-family: "Roboto";
 		font-size: 15px;
