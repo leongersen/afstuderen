@@ -84,7 +84,7 @@
 				return modeSelectioRadios[i].value;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -112,7 +112,7 @@
 	function getConfigString ( ) {
 
 		var config = 'CONFIG:,', mode = getSelectedMode();
-		
+
 		if ( !mode ) {
 			return false;
 		}
@@ -135,3 +135,9 @@
 	modeSelectionName.addEventListener('click', toggleModeSelection);
 	modeSelectionClose.addEventListener('click', toggleModeSelection);
 	modeSelectionClose.addEventListener('click', writeConfig);
+
+	document.addEventListener('keydown', function( e ){
+		if ( e.keyCode == 27 ) {
+			modeSelectionPannel.classList.remove('visible');
+		}
+	});
