@@ -170,11 +170,11 @@ def acceptCommandInput ( ):
 def setup ( ):
 	initSettings()
 
-	SOC = Gauge.getStateOfCharge()
-	SER.send('SOC: %s\n' % SOC)
+	VOLT = Gauge.getBatteryVoltage()
+	SER.send('Voltage: %s\n' % VOLT)
 
 	# Don't start the network on a missing/near-empty battery
-	if SOC > 25:
+	if VOLT > 2500:
 		initNetworkRelated()
 
 	SER.send('Starting storage initialization at: %s\n' % MOD.secCounter())
