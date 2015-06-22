@@ -9,19 +9,19 @@
 	function drawChart( speed, sat, vcell, soc ) {
 
 		var options = {
-			legend: { position: 'bottom' }
+			legend: { position: 'top' }
 		};
 
-		var chart = new google.charts.Line(document.getElementById('speed'));
+		var chart = new google.visualization.LineChart(document.getElementById('speed'));
 		chart.draw(speed, options);
 
-		var chart = new google.charts.Line(document.getElementById('sat'));
+		var chart = new google.visualization.LineChart(document.getElementById('sat'));
 		chart.draw(sat, options);
 
-		var chart = new google.charts.Line(document.getElementById('vcell'));
+		var chart = new google.visualization.LineChart(document.getElementById('vcell'));
 		chart.draw(vcell, options);
 
-		var chart = new google.charts.Line(document.getElementById('soc'));
+		var chart = new google.visualization.LineChart(document.getElementById('soc'));
 		chart.draw(soc, options);
 	}
 
@@ -37,16 +37,16 @@
 			socSet = [];
 
 		speedTable.addColumn('date', 'Time');
-		speedTable.addColumn('number', 'speed');
+		speedTable.addColumn('number', 'Speed (km/h)');
 
 		satTable.addColumn('date', 'Time');
-		satTable.addColumn('number', 'nsat');
+		satTable.addColumn('number', 'Number of satellites');
 
 		vcellTable.addColumn('date', 'Time');
-		vcellTable.addColumn('number', 'vcell');
+		vcellTable.addColumn('number', 'Battery voltage (V)');
 
 		socTable.addColumn('date', 'Time');
-		socTable.addColumn('number', 'soc');
+		socTable.addColumn('number', 'State of Charge (%)');
 
 		coords.forEach(function( coord, index ){
 			speedSet.push([new Date(coord[6]), Number(coord[3])]);
@@ -59,6 +59,9 @@
 		satTable.addRows(satSet);
 		vcellTable.addRows(vcellSet);
 		socTable.addRows(socSet);
+
+		var formatter = new google.visualization.NumberFormat({pattern:'#.##'});
+		formatter.format(vcellTable, 1);
 
 		drawChart(speedTable, satTable, vcellTable, socTable);
 	}
